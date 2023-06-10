@@ -1,0 +1,31 @@
+﻿@model Blog_F1.Models.ViewModels.AddTagRequest
+@{
+}
+
+
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Dodaj nowy Tag - Funkcja Admina</h1>
+    </div>
+
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Nazwa</label>
+            <input type="text" class="form-control" id="name" asp-for="Name" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Wyświetlana_Nazwa</label>
+            <input type="text" class="form-control" id="displayName" asp-for="DisplayName" />
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">Prześlij</button>
+        </div>
+    </form>
+
+</div>
