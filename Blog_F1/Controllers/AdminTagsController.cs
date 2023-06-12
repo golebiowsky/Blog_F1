@@ -1,16 +1,19 @@
 ﻿using Blog_F1.Data;
 using Blog_F1.Models.Domain;
 using Blog_F1.Models.ViewModels;
+using Blog_F1.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog_F1.Controllers
 {
     public class AdminTagsController : Controller
     {
-        private F1DbContext f1DbContext;
-        public AdminTagsController(F1DbContext f1DbContext)
+        private readonly ITagRepository tagRepository;
+
+        public AdminTagsController(ITagRepository tagRepository)
         {
-            this.f1DbContext = f1DbContext;
+            this.tagRepository = tagRepository;
         }
 
 
@@ -22,9 +25,9 @@ namespace Blog_F1.Controllers
 
         [HttpPost]
 
-        public IActionResult Add(AddTagRequest addTagRequest)
+        public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
-            //Mapowanie AddTagRequest to Tag domain model
+            
             var tag = new Tag
             {
                 Name = addTagRequest.Name,
@@ -32,29 +35,28 @@ namespace Blog_F1.Controllers
             };
 
 
-            f1DbContext.Tags.Add(tag);
-            f1DbContext.SaveChanges();
+            await tagRepository.AddAsync(tag);
 
             return RedirectToAction("List");
         }
 
         [HttpGet]
         [ActionName("List")]
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
 
             //uzywamy dbContext aby odczytac tagi
-            var tags=f1DbContext.Tags.ToList();
+            var tags = await tagRepository.GetAllAsync();
 
             return View(tags);
         }
 
 
         [HttpGet]
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
 
-            var tag=f1DbContext.Tags.FirstOrDefault(x => x.Id == id);
+            var tag= await tagRepository.GetAsync(id);
 
             if(tag != null)
             {
@@ -72,7 +74,7 @@ namespace Blog_F1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(EditTagRequest editTagRequest)
+        public async Task<IActionResult> Edit(EditTagRequest editTagRequest)
         {
             var tag = new Tag
             {
@@ -81,38 +83,31 @@ namespace Blog_F1.Controllers
                 DisplayName = editTagRequest.DisplayName,
             };
 
-            var existingTag=f1DbContext.Tags.Find(tag.Id);
+            var updatedTag =await tagRepository.UpdateAsync(tag);
 
-            if(existingTag != null)
+            if(updatedTag != null)
             {
-                existingTag.Name = tag.Name;
-                existingTag.DisplayName = tag.DisplayName;
-
-                //zapisanie zmian
-                f1DbContext.SaveChanges();
-
-                //Powiadomienie o sukcesie
-                return RedirectToAction("Edit", new {id=editTagRequest.Id});
+                //pokaż powiadomienie o sukcesie
             }
-
-            //Powiadomienie o błedzie
+            else
+            {
+                //pokaż powiadomienie o błedzie
+            }
+            
             return RedirectToAction("Edit", new {id=editTagRequest.Id});
         }
 
-        public IActionResult Delete(EditTagRequest editTagRequest) 
+        public async Task<IActionResult> Delete(EditTagRequest editTagRequest) 
         {
-           var tag= f1DbContext.Tags.Find(editTagRequest.Id);
+           
+            var deletedTag = await tagRepository.DeleteAsync(editTagRequest.Id);
 
-        if(tag != null)
+            if(deletedTag != null)
             {
-                f1DbContext.Tags.Remove(tag);
-                f1DbContext.SaveChanges();
-
-                //powiadomienie o sukcesie
+                //pokaż powiadomienie o sukcesie
                 return RedirectToAction("List");
             }
-
-        //powiadomienie o błędzieS
+        
         return RedirectToAction("Edit", new {id=editTagRequest.Id});
         }
     }

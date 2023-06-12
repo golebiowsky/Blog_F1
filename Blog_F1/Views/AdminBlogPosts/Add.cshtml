@@ -1,0 +1,77 @@
+﻿@model Blog_F1.Models.ViewModels.AddBlogPostRequest
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Dodaj nowy Post na Blogu - Funkcja Admina</h1>
+    </div>
+
+</div>
+
+
+<div class="container py-5">
+    <form method="post">
+
+        <div class="mb-3">
+            <lablel class="form-label">Nagłówek</lablel>
+            <input type="text" class="form-control" id="heading" asp-for="Naglowek" />
+        </div>
+
+        <div class="mb-3">
+            <lablel class="form-label">Tytuł Strony</lablel>
+            <input type="text" class="form-control" id="heading" asp-for="StronaTytul" />
+        </div>
+
+        <div class="mb-3">
+            <lablel class="form-label">Zawartość</lablel>
+            <textarea class="form-control" id="content" asp-for="Zawartosc"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <lablel class="form-label">Krótki Opis</lablel>
+            <input type="text" class="form-control" id="shortDescription" asp-for="KrotkiOpis" />
+        </div>
+
+        <div class="mb-3">
+            <lablel class="form-label">Adres URL obrazu</lablel>
+            <input type="text" class="form-control" id="featuredImageUrl" asp-for="FeaturedImageUrl" />
+        </div>
+
+        <div class="mb-3">
+            <lablel class="form-label">Identyfikator adresu URL</lablel>
+            <input type="text" class="form-control" id="urlHandle" asp-for="UrlHandle" />
+        </div>
+
+        <div class="mb-3">
+            <lablel class="form-label">Data Publikacji</lablel>
+            <input type="date" class="form-control" id="publishedDate" asp-for="DataPublikacji" />
+        </div>
+
+        <div class="mb-3">
+            <lablel class="form-label">Autor</lablel>
+            <input type="text" class="form-control" id="author" asp-for="Autor" />
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="visible" asp-for="Widocznosc">
+            <label class="form-check-label" >
+                Czy jest widoczny?
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <lable class="form-label">Tagi</lable>
+            <select class="form-select" asp-items="@Model.Tags" asp-for="SelectedTags">
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">
+                Zapisz
+            </button>
+        </div>
+
+    </form>
+</div>
