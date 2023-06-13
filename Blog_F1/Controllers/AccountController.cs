@@ -24,7 +24,8 @@ namespace Blog_F1.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
-            
+            if (ModelState.IsValid)
+            {
                 var identityUser = new IdentityUser
                 {
                     UserName = registerViewModel.Username,
@@ -39,6 +40,9 @@ namespace Blog_F1.Controllers
                         return RedirectToAction("Register");
                     }
                 }
+            }
+            
+                
                 return View();
             
             
@@ -59,6 +63,11 @@ namespace Blog_F1.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            if(!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var signInResult=await signInManager.PasswordSignInAsync(loginViewModel.Username, loginViewModel.Password, false, false);
             if (signInResult!=null && signInResult.Succeeded)
             {

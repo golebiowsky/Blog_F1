@@ -29,7 +29,14 @@ namespace Blog_F1.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
-            
+
+            ValidateAddTagRequest(addTagRequest);
+
+            if (ModelState.IsValid == false)
+            {
+                return View();
+            }
+
             var tag = new Tag
             {
                 Name = addTagRequest.Name,
@@ -113,6 +120,17 @@ namespace Blog_F1.Controllers
             }
         
         return RedirectToAction("Edit", new {id=editTagRequest.Id});
+        }
+
+        private void ValidateAddTagRequest(AddTagRequest request)
+        {
+            if(request.Name is not null && request.DisplayName is not null)
+            {
+                if(request.Name==request.DisplayName)
+                {
+                    ModelState.AddModelError("Name", "Nazwa nie może być taka sama");
+                }
+            }
         }
     }
 }
