@@ -17,47 +17,61 @@
         <form method="post">
 
         <div class="mb-3">
-            <lablel class="form-label">Id</lablel>
+            <label class="form-label">Id</label>
             <input type="text" class="form-control" id="id" asp-for="Id" readonly />
         </div>
 
         <div class="mb-3">
-            <lablel class="form-label">Nagłówek</lablel>
+            <label class="form-label">Nagłówek</label>
             <input type="text" class="form-control" id="heading" asp-for="Naglowek" />
         </div>
 
         <div class="mb-3">
-            <lablel class="form-label">Tytuł Strony</lablel>
+            <label class="form-label">Tytuł Strony</label>
             <input type="text" class="form-control" id="heading" asp-for="StronaTytul" />
         </div>
 
         <div class="mb-3">
-            <lablel class="form-label">Zawartość</lablel>
+            <label class="form-label">Zawartość</label>
             <textarea class="form-control" id="content" asp-for="Zawartosc"></textarea>
         </div>
 
         <div class="mb-3">
-            <lablel class="form-label">Krótki Opis</lablel>
+            <label class="form-label">Krótki Opis</label>
             <input type="text" class="form-control" id="shortDescription" asp-for="KrotkiOpis" />
         </div>
 
+            <div class="mb-3">
+                <label class="form-label">Użyj zapisanego obrazu</label>
+                <input type="file" id="featuredImageUpload" class="form-control" />
+                @if (Model.FeaturedImageUrl != null)
+                {
+                    <img src="@Model.FeaturedImageUrl" id="featuredImageDisplay" style="display:block;width:300px;" />
+                }
+                else
+                {
+                    <img src="" id="featuredImageDisplay" style="display:none;width:300px;" />
+                }
+                
+            </div>
+
         <div class="mb-3">
-            <lablel class="form-label">Adres URL obrazu</lablel>
+            <label class="form-label">Adres URL obrazu</label>
             <input type="text" class="form-control" id="featuredImageUrl" asp-for="FeaturedImageUrl" />
         </div>
 
         <div class="mb-3">
-            <lablel class="form-label">Identyfikator adresu URL</lablel>
+            <label class="form-label">Identyfikator adresu URL</label>
             <input type="text" class="form-control" id="urlHandle" asp-for="UrlHandle" />
         </div>
 
         <div class="mb-3">
-            <lablel class="form-label">Data Publikacji</lablel>
+            <label class="form-label">Data Publikacji</label>
             <input type="date" class="form-control" id="publishedDate" asp-for="DataPublikacji" />
         </div>
 
         <div class="mb-3">
-            <lablel class="form-label">Autor</lablel>
+            <label class="form-label">Autor</label>
             <input type="text" class="form-control" id="author" asp-for="Autor" />
         </div>
 
@@ -69,7 +83,7 @@
         </div>
 
         <div class="mb-3">
-            <lable class="form-label">Tagi</lable>
+            <label class="form-label">Tagi</label>
             <select class="form-select" asp-items="@Model.Tags" asp-for="SelectedTags">
             </select>
         </div>
@@ -87,3 +101,39 @@
     }
 
 </div>
+
+@section Scripts{
+    <script>
+        var editor = new FroalaEditor('#content', {
+            imageUploadURL: '/api/images'
+        });
+        const featuredUploadElement = document.getElementById('featuredImageUpload');
+        const featuredImageUrlElement = document.getElementById('featuredImageUrl');
+        const featuredImageDisplayElement = document.getElementById('featuredImageDisplay');
+
+        async function uploadFeaturedImage(i) {
+            console.log(i.target.files[0]);
+            let data = new FormData();
+            data.append('file', i.target.files[0]);
+            await fetch('/api/images', {
+                method: 'POST',
+                headers: {
+                    'Accept': '*/*',
+                },
+                body: data
+            }).then(response => response.json())
+                .then(result => {
+                    featuredImageUrlElement.value = result.link;
+                    featuredImageDisplayElement.src = result.link;
+                    featuredImageDisplayElement.style.display = 'block';
+                });
+
+        }
+
+
+
+        featuredUploadElement.addEventListener('change', uploadFeaturedImage);
+
+
+    </script>
+ }

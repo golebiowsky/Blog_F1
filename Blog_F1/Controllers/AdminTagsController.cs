@@ -2,6 +2,7 @@
 using Blog_F1.Models.Domain;
 using Blog_F1.Models.ViewModels;
 using Blog_F1.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,15 +17,16 @@ namespace Blog_F1.Controllers
             this.tagRepository = tagRepository;
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
 
-        [HttpPost]
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
         public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
             
@@ -40,6 +42,7 @@ namespace Blog_F1.Controllers
             return RedirectToAction("List");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [ActionName("List")]
         public async Task<IActionResult> List()
@@ -51,7 +54,7 @@ namespace Blog_F1.Controllers
             return View(tags);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -72,7 +75,7 @@ namespace Blog_F1.Controllers
 
             return View(null);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(EditTagRequest editTagRequest)
         {
@@ -96,7 +99,8 @@ namespace Blog_F1.Controllers
             
             return RedirectToAction("Edit", new {id=editTagRequest.Id});
         }
-
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
         public async Task<IActionResult> Delete(EditTagRequest editTagRequest) 
         {
            

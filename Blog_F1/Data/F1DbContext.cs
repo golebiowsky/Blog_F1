@@ -5,7 +5,7 @@ namespace Blog_F1.Data
 {
     public class F1DbContext : DbContext
     {
-        public F1DbContext(DbContextOptions options) : base(options)
+        public F1DbContext(DbContextOptions<F1DbContext> options) : base(options)
         {
         }
 

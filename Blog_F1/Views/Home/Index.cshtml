@@ -1,8 +1,75 @@
-﻿@{
+﻿@model Blog_F1.Models.ViewModels.HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-5 py-5" >
+        <div class="col-12 col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">
+                Formula 1 - Blog o świecie F1
+            </h1>
+            <p class="lead">
+                Blog_F1 jest miejscem, gdzie znajdziesz najnowsze informacje ze świata Formuły 1. Newsy o kierowcach, zespołach oraz wyścigach.
+
+            </p>
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+            <img src="https://images.pexels.com/photos/12989709/pexels-photo-12989709.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Formuła 1" class="d-block mx-lg-auto img-fluid" width="300" />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6 d-flex">
+            @if(Model!=null && Model.Tags.Any())
+            {
+                foreach(var tag in Model.Tags)
+                {
+                    <spa class="badge bg-dark me-1"n>
+                        @tag.Name
+                    </spa>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            @if(Model!=null&& Model.BlogPosts.Any())
+            {
+                foreach(var blogPost in Model.BlogPosts)
+                {
+                    <div class="mb-5 bg-light box-shadow p-5">
+                        <img src="@blogPost.FeaturedImageUrl" alt="@blogPost.Naglowek" class="mb-2 d-block img-fluid" />
+                        <h2 class="mb-3">@blogPost.Naglowek</h2>
+                        <p class="mb-3">
+                            Autor: @blogPost.Autor
+                            <br/>
+                            Data publikacji: @blogPost.DataPublikacji.ToShortDateString()
+                        </p>
+
+                        <p class="mb-3">
+                            @foreach (var tag in blogPost.Tags)
+                            {
+                                <span class="badge bg-secondary me-1">@tag.Name</span>
+                            }
+                        </p>
+
+                        <p class="mb-3">@blogPost.KrotkiOpis</p>
+                        <a class="btn btn-dark" asp-area="" asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle">Dowiedz się Więcej</a>
+
+                    </div>
+
+                }
+            }
+        </div>
+    </div>
 </div>

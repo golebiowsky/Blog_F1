@@ -1,11 +1,13 @@
 ﻿using Blog_F1.Models.Domain;
 using Blog_F1.Models.ViewModels;
 using Blog_F1.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Blog_F1.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminBlogPostsController : Controller
     {
         private readonly ITagRepository tagRepository;
@@ -29,7 +31,7 @@ namespace Blog_F1.Controllers
 
             return View(model);
         }
-
+        [HttpPost]
         public async Task<IActionResult> Add(AddBlogPostRequest addBlogPostRequest)
         {
             var blogPost = new BlogPost
